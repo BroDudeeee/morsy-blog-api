@@ -13,7 +13,8 @@ const readPosts = async (req, res) => {
   const { page } = req.params;
   try {
     const posts = await Post.find({})
-      .limit(Number(page) * 20)
+      .limit(20)
+      .skip((Number(page) - 1) * 20)
       .sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (error) {
