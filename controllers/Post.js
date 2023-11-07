@@ -47,8 +47,10 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
-    res.status(202).json("Deleted Successfully");
+    const deletedPost = await Post.findByIdAndDelete(req.params.id);
+    res
+      .status(202)
+      .json({ msg: "Deleted Successfully", image: deletedPost.image });
   } catch (error) {
     res.status(500).json(error);
   }
