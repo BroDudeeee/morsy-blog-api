@@ -2,7 +2,19 @@ import Post from "../models/Post.js";
 
 const createPost = async (req, res) => {
   try {
-    const newPost = await Post.create(req.body);
+    const { title, body, category } = req.body;
+    const newPost = new Post({
+      title,
+      body,
+      category,
+      image: {
+        name: req.file.originalname,
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      },
+    });
+
+    await newPost.save();
     res.status(201).json(newPost);
   } catch (error) {
     res.status(500).json(error);

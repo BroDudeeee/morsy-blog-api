@@ -1,4 +1,9 @@
 import express from "express";
+import multer from "multer";
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 import {
   createPost,
   deletePost,
@@ -9,7 +14,7 @@ import {
 
 const router = express.Router();
 
-router.route("/").post(createPost);
+router.post("/", upload.single("image"), createPost);
 router.route("/page/:page").get(readPosts);
 router.route("/post/:id").get(readPost).patch(updatePost).delete(deletePost);
 
