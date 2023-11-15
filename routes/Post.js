@@ -16,6 +16,10 @@ const router = express.Router();
 
 router.post("/", upload.single("image"), createPost);
 router.route("/page/:page").get(readPosts);
-router.route("/post/:id").get(readPost).patch(updatePost).delete(deletePost);
+router
+  .route("/post/:id")
+  .get(readPost)
+  .patch(upload.single("image"), updatePost)
+  .delete(deletePost);
 
 export default router;

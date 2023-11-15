@@ -46,12 +46,32 @@ const readPost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
+  console.log(req.body);
   try {
-    await Post.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    res.status(200).json("Updated Successfully");
+    const postId = req.params.id;
+    const existingPost = await Post.findById(postId);
+
+    if (!existingPost) {
+      return res.status(404).json({ msg: "No post Found!" });
+    }
+
+    const { title, body, category } = req.body;
+
+    existingPost.title = title;
+    existingPost.body = body;
+    existingPost.category = category;
+
+    if (req.file) {
+      existingPost.image = {
+        name: req.file.originalname,
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
+    await existingPost.save();
+
+    res.status(200).json(existingPost);
   } catch (error) {
     res.status(500).json(error);
   }
